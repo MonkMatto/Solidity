@@ -1,21 +1,46 @@
 // SPDX-License-Identifier: unlicensed
 pragma solidity ^0.8.7;
 
-/// [CC BY-SA 4.0]
-/// @title BytesToHexString
-/// @notice Provides a function for converting bytes into a hexidecimal string.
-/// @author Mikhail Vladimirov (minor editing by Matto)
-/// Functions 'toHex16' and 'toHex' are thanks to the thorough example and walkthrough
-/// by Mikhail Vladimirov on https://stackoverflow.com/ using license CC BY-SA 4.0
-library BytesToHex {
+/**
+ * The following library is licensed CC BY-SA 4.0.
+ * @title BytesToHexString Library
+ * @notice Provides a function for converting bytes into a hexidecimal string.
+ * @author Mikhail Vladimirov (with edits by Matto)
+ * @dev Code in this library is based on the thorough example and walkthrough
+ * posted by Mikhail Vladimirov on https://stackoverflow.com/ using the 
+ * CC BY-SA 4.0 license.
+ */
+library BytesToHexString {
+
+  /**
+   * @notice toHex takes bytes data and returns the data as a string.
+   * @dev This is needed to convert the token entropy (bytes) into a string for
+   * return in the scriptInputsOf function. This is the function that is called
+   * first, and it calls toHex16 while processing the return.
+   * @param _data is the bytes data to convert.
+   * @return (string)
+   */
   function toHex(bytes32 _data)
-    public
+    internal
     pure
     returns (string memory) 
   {
-    return string(abi.encodePacked("0x",toHex16(bytes16(_data)),toHex16(bytes16(_data << 128))));
+    return string(
+        abi.encodePacked(
+            "0x",
+            toHex16(bytes16(_data)),
+            toHex16(bytes16(_data << 128))
+        )
+    );
   }
 
+  /**
+   * @notice toHex16 is a helper function of toHex.
+   * @dev For an explanation of the operations, see Mikhail Vladimirov's 
+   * walkthrough for converting bytes to string on https://stackoverflow.com/.
+   * @param _data is a bytes16 data chunk.
+   * @return result is a bytes32 data chunk.
+   */
   function toHex16(bytes16 _data)
     internal
     pure
